@@ -1,4 +1,4 @@
-leads = []; // array de leads
+let leads = []; // array de leads
 
 function criarLead(nome, empresa, contacto, orcamento) {
     return {
@@ -10,4 +10,8 @@ function criarLead(nome, empresa, contacto, orcamento) {
     };
 }
 
-qualificar()
+function qualificar(lead) {
+    if (lead.orcamento >= 10000) return "Quente";
+    if (lead.orcamento >= 5000) return "Morno";
+    return "Frio";
+}
