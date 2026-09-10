@@ -1,353 +1,400 @@
 <!doctype html>
 <html lang="pt">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Mini CRM de Leads - Têxtil Industrial do Ave</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="app.js" defer></script>
     <!-- defer executa o JavaScript depois do HTML estar carregado -->
-</head>
+  </head>
 
-<body>
-
+  <body>
     <!-- CABEÇALHO -->
     <header>
-        <h2>TÊXTIL CRM</h2>
-        <span>Gestão de Leads</span>
+      <h2>TÊXTIL CRM</h2>
+      <span>Gestão de Leads</span>
     </header>
 
     <main>
+      <!-- TÍTULO -->
+      <section class="topo-pagina">
+        <div>
+          <h1>Gestão de Leads</h1>
+          <p>Acompanhe e atualize as oportunidades comerciais</p>
+        </div>
 
-        <!-- TÍTULO -->
-        <section class="topo-pagina">
-            <div>
-                <h1>Gestão de Leads</h1>
-                <p>Acompanhe e atualize as oportunidades comerciais</p>
-            </div>
+        <button id="btnNovoLead">+ Novo Lead</button>
+      </section>
 
-            <button id="btnNovoLead">+ Novo Lead</button>
-        </section>
+      <!-- INDICADORES -->
+      <section id="indicadores">
+        <div>
+          <p>Total de leads</p>
+          <h2 id="totalLeads">0</h2>
+        </div>
 
-        <!-- INDICADORES -->
-        <section id="indicadores">
-            <div>
-                <p>Total de leads</p>
-                <h2 id="totalLeads">0</h2>
-            </div>
+        <div>
+          <p>Valor potencial ativo</p>
+          <h2 id="valorPotencial">0 €</h2>
+        </div>
 
-            <div>
-                <p>Valor potencial ativo</p>
-                <h2 id="valorPotencial">0 €</h2>
-            </div>
+        <div>
+          <p>Leads ganhos</p>
+          <h2 id="leadsGanhos">0</h2>
+        </div>
 
-            <div>
-                <p>Leads ganhos</p>
-                <h2 id="leadsGanhos">0</h2>
-            </div>
+        <div>
+          <p>Taxa de conversão</p>
+          <h2 id="taxaConversao">0%</h2>
+        </div>
 
-            <div>
-                <p>Taxa de conversão</p>
-                <h2 id="taxaConversao">0%</h2>
-            </div>
+        <div>
+          <p>Ciclo médio</p>
+          <h2 id="cicloMedio">0 dias</h2>
+        </div>
+      </section>
 
-            <div>
-                <p>Ciclo médio</p>
-                <h2 id="cicloMedio">0 dias</h2>
-            </div>
-        </section>
+      <!-- LISTA DE LEADS -->
+      <section id="gestaoLeads">
+        <h2>Leads</h2>
 
-        <!-- LISTA DE LEADS -->
-        <section id="gestaoLeads">
-            <h2>Leads</h2>
+        <div class="filtros">
+          <input
+            type="text"
+            id="pesquisa"
+            placeholder="Pesquisar por empresa ou contacto..."
+          />
 
-            <div class="filtros">
-                <input
-                    type="text"
-                    id="pesquisa"
-                    placeholder="Pesquisar por empresa ou contacto..."
-                >
+          <select id="filtroEstado">
+            <option value="">Estado: Todos</option>
+            <option value="Novo">Novo</option>
+            <option value="Levantamento de necessidades">
+              Levantamento de necessidades
+            </option>
+            <option value="Prova de Conceito">Prova de Conceito</option>
+            <option value="Proposta">Proposta</option>
+            <option value="Negociação">Negociação</option>
+            <option value="Ganho">Ganho</option>
+            <option value="Perdido">Perdido</option>
+          </select>
+        </div>
 
-                <select id="filtroEstado">
-                    <option value="">Estado: Todos</option>
-                    <option value="Novo">Novo</option>
-                    <option value="Levantamento de necessidades">Levantamento de necessidades</option>
-                    <option value="Prova de Conceito">Prova de Conceito</option>
-                    <option value="Proposta">Proposta</option>
-                    <option value="Negociação">Negociação</option>
-                    <option value="Ganho">Ganho</option>
-                    <option value="Perdido">Perdido</option>
-                </select>
-            </div>
-
-            <div id="listaLeads"></div>
-        </section>
-
+        <div id="listaLeads"></div>
+      </section>
     </main>
-
 
     <!-- MODAL NOVO LEAD -->
     <div id="novoLead" class="modal" hidden>
-        <div class="modal-conteudo modal-grande">
-
-            <div class="modal-cabecalho">
-                <h2>Novo Lead</h2>
-            </div>
-
-            <form id="formLead" class="form-grid">
-
-                <label for="empresa">Nome da empresa:</label>
-                <input type="text" id="empresa">
-
-                <label for="nomeContacto">Nome do contacto:</label>
-                <input type="text" id="nomeContacto">
-
-                <label for="email">Email:</label>
-                <input type="email" id="email">
-
-                <label for="telefone">Telefone:</label>
-                <input type="number" id="telefone">
-
-                <label for="origem">Origem do Lead:</label>
-                <select id="origem">
-                    <option value="">Selecione</option>
-                    <option value="Website">Website</option>
-                    <option value="Email">Email</option>
-                    <option value="Telefone">Telefone</option>
-                    <option value="Redes Sociais">Redes Sociais</option>
-                </select>
-
-                <label for="setor">Setor do cliente:</label>
-                <select id="setor">
-                    <option value="">Selecione</option>
-                    <option value="Hotelaria">Hotelaria</option>
-                    <option value="Saúde">Saúde</option>
-                    <option value="Indústria">Indústria</option>
-                </select>
-
-                <label for="numeroColaboradores">Número de colaboradores:</label>
-                <input type="number" id="numeroColaboradores">
-
-                <label for="tipoAtividade">Tipo de atividade:</label>
-                <select id="tipoAtividade">
-                    <option value="">Selecione</option>
-                    <option value="Hotel">Hotel</option>
-                    <option value="Restaurante">Restaurante</option>
-                    <option value="Hospital">Hospital</option>
-                    <option value="Clínica">Clínica</option>
-                    <option value="Indústria Alimentar">Indústria Alimentar</option>
-                    <option value="Outros">Outros</option>
-                </select>
-
-                <label for="produto">Produto / Fardamento:</label>
-                <select id="produto">
-                    <option value="">Selecione</option>
-                    <option value="Fardamento profissional">Fardamento profissional</option>
-                    <option value="Uniformes corporativos">Uniformes corporativos</option>
-                    <option value="Fardamento personalizado">Fardamento personalizado</option>
-                    <option value="Calçado de proteção">Calçado de proteção</option>
-                    <option value="Outros artigos de segurança">Outros artigos de segurança</option>
-                </select>
-
-                <label for="tamanhos">Tamanhos necessários:</label>
-                <input type="text" id="tamanhos">
-
-                <label for="cores">Cores pretendidas:</label>
-                <input type="text" id="cores">
-
-                <label for="personalizacao">Personalização / Bordado:</label>
-                <select id="personalizacao">
-                    <option value="">Selecione</option>
-                    <option value="Sem personalização">Sem personalização</option>
-                    <option value="Bordado">Bordado</option>
-                    <option value="Estampagem">Estampagem</option>
-                </select>
-
-                <label for="requisitosSeguranca">Requisitos de segurança:</label>
-                <select id="requisitosSeguranca">
-                    <option value="">Selecione</option>
-                    <option value="Sem requisitos específicos">Sem requisitos específicos</option>
-                    <option value="Fardamento ignífugo">Fardamento ignífugo</option>
-                    <option value="Outros">Outros</option>
-                </select>
-
-                <label for="orcamento">Orçamento estimado (€):</label>
-                <input type="number" id="orcamento" step="0.01">
-
-                <label for="comercialResponsavel">Comercial responsável:</label>
-                <select id="comercialResponsavel">
-                    <option value="">Selecione</option>
-                    <option value="Catarina Marques">Catarina Marques</option>
-                    <option value="Ivan Silva">Ivan Silva</option>
-                </select>
-
-                <label for="observacoes">Observações:</label>
-                <textarea id="observacoes" rows="3"></textarea>
-
-                <div class="form-acoes">
-                    <button type="button" class="btn-secundario" id="btnCancelar">Cancelar</button>
-                    <button type="submit" class="btn-principal">Guardar Lead</button>
-                </div>
-
-            </form>
+      <div class="modal-conteudo modal-grande">
+        <div class="modal-cabecalho">
+          <h2>Novo Lead</h2>
         </div>
-    </div>
 
+        <form id="formLead" class="form-grid">
+          <p class="form-obrigatorio"> <!-- impedir que avance sem preecher os campos obrigatórios -->
+            Os campos assinalados com * são obrigatórios.
+          </p>
+
+          <label class="campo-obrigatorio" for="empresa"
+            >Nome da empresa:</label
+          >
+          <input type="text" id="empresa" required />
+
+          <label class="campo-obrigatorio" for="nomeContacto"
+            >Nome do contacto:</label
+          >
+          <input type="text" id="nomeContacto" required />
+
+          <label class="campo-obrigatorio" for="email">Email:</label>
+          <input type="email" id="email" required />
+
+          <label for="telefone">Telefone:</label>
+          <input type="number" id="telefone" />
+
+          <label class="campo-obrigatorio" for="origem">Origem do Lead:</label>
+          <select id="origem" required>
+            <option value="">Selecione</option>
+            <option value="Website">Website</option>
+            <option value="Email">Email</option>
+            <option value="Telefone">Telefone</option>
+            <option value="Redes Sociais">Redes Sociais</option>
+          </select>
+
+          <label class="campo-obrigatorio" for="setor">Setor do cliente:</label>
+          <select id="setor" required>
+            <option value="">Selecione</option>
+            <option value="Hotelaria">Hotelaria</option>
+            <option value="Saúde">Saúde</option>
+            <option value="Indústria">Indústria</option>
+          </select>
+
+          <label for="numeroColaboradores">Número de colaboradores:</label>
+          <input type="number" id="numeroColaboradores" />
+
+          <label for="tipoAtividade">Tipo de atividade:</label>
+          <select id="tipoAtividade">
+            <option value="">Selecione</option>
+            <option value="Hotel">Hotel</option>
+            <option value="Restaurante">Restaurante</option>
+            <option value="Hospital">Hospital</option>
+            <option value="Clínica">Clínica</option>
+            <option value="Indústria Alimentar">Indústria Alimentar</option>
+            <option value="Outros">Outros</option>
+          </select>
+
+          <label for="produto">Produto / Fardamento:</label>
+          <select id="produto">
+            <option value="">Selecione</option>
+            <option value="Fardamento profissional">
+              Fardamento profissional
+            </option>
+            <option value="Uniformes corporativos">
+              Uniformes corporativos
+            </option>
+            <option value="Fardamento personalizado">
+              Fardamento personalizado
+            </option>
+            <option value="Calçado de proteção">Calçado de proteção</option>
+            <option value="Outros artigos de segurança">
+              Outros artigos de segurança
+            </option>
+          </select>
+
+          <label for="tamanhos">Tamanhos necessários:</label>
+          <input type="text" id="tamanhos" />
+
+          <label for="cores">Cores pretendidas:</label>
+          <input type="text" id="cores" />
+
+          <label for="personalizacao">Personalização / Bordado:</label>
+          <select id="personalizacao">
+            <option value="">Selecione</option>
+            <option value="Sem personalização">Sem personalização</option>
+            <option value="Bordado">Bordado</option>
+            <option value="Estampagem">Estampagem</option>
+          </select>
+
+          <label for="requisitosSeguranca">Requisitos de segurança:</label>
+          <select id="requisitosSeguranca">
+            <option value="">Selecione</option>
+            <option value="Sem requisitos específicos">
+              Sem requisitos específicos
+            </option>
+            <option value="Fardamento ignífugo">Fardamento ignífugo</option>
+            <option value="Outros">Outros</option>
+          </select>
+
+          <label class="campo-obrigatorio" for="orcamento"
+            >Orçamento estimado (€):</label
+          >
+          <input type="number" id="orcamento" min="0.01" step="0.01" required />
+
+          <label class="campo-obrigatorio" for="comercialResponsavel"
+            >Comercial responsável:</label
+          >
+          <select id="comercialResponsavel" required>
+            <option value="">Selecione</option>
+            <option value="Catarina Marques">Catarina Marques</option>
+            <option value="Ivan Silva">Ivan Silva</option>
+          </select>
+
+          <label for="observacoes">Observações:</label>
+          <textarea id="observacoes" rows="3"></textarea>
+
+          <div class="form-acoes">
+            <button type="button" class="btn-secundario" id="btnCancelar">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-principal">Guardar Lead</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <!-- MODAL VER LEAD -->
     <div id="modalVer" class="modal" hidden>
-        <div class="modal-conteudo">
-
-            <div class="modal-cabecalho">
-                <h2>Detalhes do Lead</h2>
-                <button type="button" class="btn-fechar" id="btnFecharVer">×</button>
-            </div>
-
-            <div id="detalhesLead" class="modal-corpo"></div>
-
-            <div class="modal-acoes">
-                <button type="button" class="btn-perigo" id="btnEliminarVer">Eliminar</button>
-                <button type="button" class="btn-secundario" id="btnEditarVer">Editar</button>
-                <button type="button" class="btn-secundario" id="btnPerdidoVer">Marcar perdido</button>
-                <button type="button" class="btn-principal" id="btnAvancarVer">Avançar estado</button>
-            </div>
-
+      <div class="modal-conteudo">
+        <div class="modal-cabecalho">
+          <h2>Detalhes do Lead</h2>
+          <button type="button" class="btn-fechar" id="btnFecharVer">×</button>
         </div>
-    </div>
 
+        <div id="detalhesLead" class="modal-corpo"></div>
+
+        <div class="modal-acoes">
+          <button type="button" class="btn-perigo" id="btnEliminarVer">
+            Eliminar
+          </button>
+          <button type="button" class="btn-secundario" id="btnEditarVer">
+            Editar
+          </button>
+          <button type="button" class="btn-secundario" id="btnPerdidoVer">
+            Marcar perdido
+          </button>
+          <button type="button" class="btn-principal" id="btnAvancarVer">
+            Avançar estado
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- MODAL EDITAR LEAD -->
     <div id="modalEditar" class="modal" hidden>
-        <div class="modal-conteudo modal-grande">
-
-            <div class="modal-cabecalho">
-                <h2>Editar Lead</h2>
-                <button type="button" class="btn-fechar" id="btnFecharEditar">×</button>
-            </div>
-
-            <form id="formEditarLead" class="form-grid">
-
-                <label for="editEmpresa">Nome da empresa:</label>
-                <input type="text" id="editEmpresa">
-
-                <label for="editNomeContacto">Nome do contacto:</label>
-                <input type="text" id="editNomeContacto">
-
-                <label for="editEmail">Email:</label>
-                <input type="email" id="editEmail">
-
-                <label for="editTelefone">Telefone:</label>
-                <input type="number" id="editTelefone">
-
-                <label for="editOrigem">Origem do Lead:</label>
-                <select id="editOrigem">
-                    <option value="">Selecione</option>
-                    <option value="Website">Website</option>
-                    <option value="Email">Email</option>
-                    <option value="Telefone">Telefone</option>
-                    <option value="Redes Sociais">Redes Sociais</option>
-                </select>
-
-                <label for="editSetor">Setor:</label>
-                <select id="editSetor">
-                    <option value="">Selecione</option>
-                    <option value="Hotelaria">Hotelaria</option>
-                    <option value="Saúde">Saúde</option>
-                    <option value="Indústria">Indústria</option>
-                </select>
-
-                <label for="editNumeroColaboradores">Número de colaboradores:</label>
-                <input type="number" id="editNumeroColaboradores">
-
-                <label for="editTipoAtividade">Tipo de atividade:</label>
-                <select id="editTipoAtividade">
-                    <option value="">Selecione</option>
-                    <option value="Hotel">Hotel</option>
-                    <option value="Restaurante">Restaurante</option>
-                    <option value="Hospital">Hospital</option>
-                    <option value="Clínica">Clínica</option>
-                    <option value="Indústria Alimentar">Indústria Alimentar</option>
-                    <option value="Outros">Outros</option>
-                </select>
-
-                <label for="editProduto">Produto / Fardamento:</label>
-                <select id="editProduto">
-                    <option value="">Selecione</option>
-                    <option value="Fardamento profissional">Fardamento profissional</option>
-                    <option value="Uniformes corporativos">Uniformes corporativos</option>
-                    <option value="Fardamento personalizado">Fardamento personalizado</option>
-                    <option value="Calçado de proteção">Calçado de proteção</option>
-                    <option value="Outros artigos de segurança">Outros artigos de segurança</option>
-                </select>
-
-                <label for="editTamanhos">Tamanhos:</label>
-                <input type="text" id="editTamanhos">
-
-                <label for="editCores">Cores:</label>
-                <input type="text" id="editCores">
-
-                <label for="editPersonalizacao">Personalização / Bordado:</label>
-                <select id="editPersonalizacao">
-                    <option value="">Selecione</option>
-                    <option value="Sem personalização">Sem personalização</option>
-                    <option value="Bordado">Bordado</option>
-                    <option value="Estampagem">Estampagem</option>
-                </select>
-
-                <label for="editRequisitosSeguranca">Requisitos de segurança:</label>
-                <select id="editRequisitosSeguranca">
-                    <option value="">Selecione</option>
-                    <option value="Sem requisitos específicos">Sem requisitos específicos</option>
-                    <option value="Fardamento ignífugo">Fardamento ignífugo</option>
-                    <option value="Outros">Outros</option>
-                </select>
-
-                <label for="editOrcamento">Orçamento (€):</label>
-                <input type="number" id="editOrcamento" step="0.01">
-
-                <label for="editComercialResponsavel">Comercial responsável:</label>
-                <select id="editComercialResponsavel">
-                    <option value="">Selecione</option>
-                    <option value="Catarina Marques">Catarina Marques</option>
-                    <option value="Ivan Silva">Ivan Silva</option>
-                </select>
-
-                <label for="editObservacoes">Observações:</label>
-                <textarea id="editObservacoes" rows="3"></textarea>
-
-                <div class="form-acoes">
-                    <button type="button" class="btn-secundario" id="btnCancelarEditar">Cancelar</button>
-                    <button type="submit" class="btn-principal">Guardar alterações</button>
-                </div>
-
-            </form>
+      <div class="modal-conteudo modal-grande">
+        <div class="modal-cabecalho">
+          <h2>Editar Lead</h2>
+          <button type="button" class="btn-fechar" id="btnFecharEditar">
+            ×
+          </button>
         </div>
-    </div>
 
+        <form id="formEditarLead" class="form-grid">
+          <label for="editEmpresa">Nome da empresa:</label>
+          <input type="text" id="editEmpresa" />
+
+          <label for="editNomeContacto">Nome do contacto:</label>
+          <input type="text" id="editNomeContacto" />
+
+          <label for="editEmail">Email:</label>
+          <input type="email" id="editEmail" />
+
+          <label for="editTelefone">Telefone:</label>
+          <input type="number" id="editTelefone" />
+
+          <label for="editOrigem">Origem do Lead:</label>
+          <select id="editOrigem">
+            <option value="">Selecione</option>
+            <option value="Website">Website</option>
+            <option value="Email">Email</option>
+            <option value="Telefone">Telefone</option>
+            <option value="Redes Sociais">Redes Sociais</option>
+          </select>
+
+          <label for="editSetor">Setor:</label>
+          <select id="editSetor">
+            <option value="">Selecione</option>
+            <option value="Hotelaria">Hotelaria</option>
+            <option value="Saúde">Saúde</option>
+            <option value="Indústria">Indústria</option>
+          </select>
+
+          <label for="editNumeroColaboradores">Número de colaboradores:</label>
+          <input type="number" id="editNumeroColaboradores" />
+
+          <label for="editTipoAtividade">Tipo de atividade:</label>
+          <select id="editTipoAtividade">
+            <option value="">Selecione</option>
+            <option value="Hotel">Hotel</option>
+            <option value="Restaurante">Restaurante</option>
+            <option value="Hospital">Hospital</option>
+            <option value="Clínica">Clínica</option>
+            <option value="Indústria Alimentar">Indústria Alimentar</option>
+            <option value="Outros">Outros</option>
+          </select>
+
+          <label for="editProduto">Produto / Fardamento:</label>
+          <select id="editProduto">
+            <option value="">Selecione</option>
+            <option value="Fardamento profissional">
+              Fardamento profissional
+            </option>
+            <option value="Uniformes corporativos">
+              Uniformes corporativos
+            </option>
+            <option value="Fardamento personalizado">
+              Fardamento personalizado
+            </option>
+            <option value="Calçado de proteção">Calçado de proteção</option>
+            <option value="Outros artigos de segurança">
+              Outros artigos de segurança
+            </option>
+          </select>
+
+          <label for="editTamanhos">Tamanhos:</label>
+          <input type="text" id="editTamanhos" />
+
+          <label for="editCores">Cores:</label>
+          <input type="text" id="editCores" />
+
+          <label for="editPersonalizacao">Personalização / Bordado:</label>
+          <select id="editPersonalizacao">
+            <option value="">Selecione</option>
+            <option value="Sem personalização">Sem personalização</option>
+            <option value="Bordado">Bordado</option>
+            <option value="Estampagem">Estampagem</option>
+          </select>
+
+          <label for="editRequisitosSeguranca">Requisitos de segurança:</label>
+          <select id="editRequisitosSeguranca">
+            <option value="">Selecione</option>
+            <option value="Sem requisitos específicos">
+              Sem requisitos específicos
+            </option>
+            <option value="Fardamento ignífugo">Fardamento ignífugo</option>
+            <option value="Outros">Outros</option>
+          </select>
+
+          <label for="editOrcamento">Orçamento (€):</label>
+          <input type="number" id="editOrcamento" step="0.01" />
+
+          <label for="editComercialResponsavel">Comercial responsável:</label>
+          <select id="editComercialResponsavel">
+            <option value="">Selecione</option>
+            <option value="Catarina Marques">Catarina Marques</option>
+            <option value="Ivan Silva">Ivan Silva</option>
+          </select>
+
+          <label for="editObservacoes">Observações:</label>
+          <textarea id="editObservacoes" rows="3"></textarea>
+
+          <div class="form-acoes">
+            <button type="button" class="btn-secundario" id="btnCancelarEditar">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-principal">
+              Guardar alterações
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <!-- MODAL ELIMINAR -->
     <div id="modalEliminar" class="modal" hidden>
-        <div class="modal-conteudo modal-pequeno">
-
-            <div class="modal-cabecalho">
-                <h2>Eliminar Lead</h2>
-            </div>
-
-            <div class="modal-corpo">
-                <p id="textoEliminar"></p>
-                <p>Esta ação não pode ser anulada.</p>
-            </div>
-
-            <div class="modal-acoes">
-                <button type="button" class="btn-secundario" id="btnCancelarEliminar">Cancelar</button>
-                <button type="button" class="btn-perigo" id="btnConfirmarEliminar">Eliminar</button>
-            </div>
-
+      <div class="modal-conteudo modal-pequeno">
+        <div class="modal-cabecalho">
+          <h2>Eliminar Lead</h2>
         </div>
+
+        <div class="modal-corpo">
+          <p id="textoEliminar"></p>
+          <p>Esta ação não pode ser anulada.</p>
+        </div>
+
+        <div class="modal-acoes">
+          <button type="button" class="btn-secundario" id="btnCancelarEliminar">
+            Cancelar
+          </button>
+          <button type="button" class="btn-perigo" id="btnConfirmarEliminar">
+            Eliminar
+          </button>
+        </div>
+      </div>
     </div>
 
-</body>
+    <footer>
+      <div>
+        <p>
+          &copy; 2026 CESAE + LOBA CRM ACADEMY | Fundamentos de Programação |
+          São João da Madeira, Portugal
+        </p>
+        <hr />
+        <p>Desenvolvido por: Catarina Marques & Ivanildo Silva</p>
+      </div>
+    </footer>
+
+  </body>
 </html>
