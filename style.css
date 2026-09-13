@@ -1,22 +1,45 @@
-/* =========================
-   CONFIGURAÇÕES GERAIS
-========================= */
+/* ========================= CONFIGURACOES GERAIS ========================= */
 
 * {
+  /* Faz com que padding e border sejam incluidos dentro da largura e altura do elemento. */
   box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
 }
 
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+
+  /* Faz o body ocupar pelo menos toda a altura visivel do navegador. */
+  min-height: 100vh;
+
+  /* Organiza header, main e footer verticalmente. */
+  display: flex;
+  flex-direction: column;
+
+  /* Define a fonte principal da aplicacao. */
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    Helvetica,
+    sans-serif;
+
   background-color: #f5f7fb;
   color: #162033;
+
+  font-size: 14px;
 }
 
 button,
 input,
 select,
 textarea {
+  /* Faz os elementos do formulario usarem a mesma fonte do resto da pagina. */
   font-family: inherit;
 }
 
@@ -25,60 +48,106 @@ button {
 }
 
 [hidden] {
+  /* Esconde completamente qualquer elemento que tenha o atributo hidden. */
   display: none !important;
 }
 
-/* =========================
-   CABEÇALHO
-========================= */
+
+/* ========================= CABECALHO ========================= */
 
 header {
   height: 70px;
   padding: 0 8%;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   background-color: #071a33;
   color: white;
+
+  /* Impede o cabecalho de encolher dentro do body flex. */
+  flex-shrink: 0;
 }
 
 header h2 {
   margin: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
   font-size: 18px;
+  font-weight: 700;
+}
+
+/* Cria o pequeno quadrado com a letra T no cabecalho. */
+header h2::before {
+  content: "T";
+
+  width: 26px;
+  height: 26px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  background-color: #07877b;
+  color: white;
+
+  font-size: 11px;
+  font-weight: bold;
 }
 
 header span {
   padding: 8px 16px;
+
   border-radius: 6px;
+
   background-color: #12385d;
+
+  font-size: 13px;
 }
 
-/* =========================
-   CONTEÚDO PRINCIPAL
-========================= */
+
+/* ========================= CONTEUDO PRINCIPAL ========================= */
 
 main {
   width: 85%;
   max-width: 1300px;
+
   margin: 40px auto;
+
+  /* Faz o main ocupar o espaco livre e ajuda a manter o rodape no fundo. */
+  flex: 1;
 }
 
 .topo-pagina {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   margin-bottom: 25px;
 }
 
 .topo-pagina h1 {
   margin: 0;
+
   font-size: 28px;
+  font-weight: 700;
+
+  /* Aproxima ligeiramente as letras do titulo. */
+  letter-spacing: -0.03em;
 }
 
 .topo-pagina p {
   margin: 5px 0 0;
+
   color: #687385;
+
+  font-size: 14px;
 }
 
 #btnNovoLead {
@@ -89,15 +158,23 @@ main {
 
   background-color: #07877b;
   color: white;
+
+  font-size: 13px;
+  font-weight: 600;
 }
 
-/* =========================
-   INDICADORES
-========================= */
+#btnNovoLead:hover {
+  background-color: #06786e;
+}
+
+
+/* ========================= INDICADORES ========================= */
 
 #indicadores {
+  /* Cria uma grelha com 5 colunas iguais. */
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+
   gap: 15px;
 
   margin-bottom: 30px;
@@ -105,6 +182,7 @@ main {
 
 #indicadores div {
   min-height: 100px;
+
   padding: 20px;
 
   border: 1px solid #dce3eb;
@@ -113,6 +191,7 @@ main {
   background-color: white;
 }
 
+/* Define fundo azul escuro no primeiro indicador. */
 #indicadores div:first-child {
   background-color: #071a33;
   color: white;
@@ -136,16 +215,27 @@ main {
 
 #indicadores p {
   margin: 0 0 10px;
+
   font-size: 13px;
+
+  color: #687385;
+}
+
+#indicadores div:first-child p {
+  color: #b4c0cf;
 }
 
 #indicadores h2 {
   margin: 0;
+
+  font-size: 24px;
+  font-weight: 700;
+
+  letter-spacing: -0.02em;
 }
 
-/* =========================
-   LEADS
-========================= */
+
+/* ========================= LEADS ========================= */
 
 #gestaoLeads {
   padding: 25px;
@@ -154,6 +244,10 @@ main {
   border-radius: 10px;
 
   background-color: white;
+}
+
+#gestaoLeads h2 {
+  font-size: 22px;
 }
 
 .filtros {
@@ -178,29 +272,44 @@ textarea {
   border-radius: 5px;
 
   background-color: white;
+
+  color: #162033;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
   outline: none;
+
   border-color: #07877b;
 }
 
-/* Cada Lead da lista */
+
+/* ========================= CADA LEAD DA LISTA ========================= */
 
 #listaLeads {
   margin-top: 25px;
 }
 
 .lead {
+  /* Distribui a informacao do Lead pelas varias colunas. */
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr 1.3fr auto;
+
+  /* Define o espaco ocupado por cada coluna da lista de Leads. */
+  grid-template-columns:
+    1.5fr
+    1fr
+    1fr
+    1fr
+    1.3fr
+    auto;
+
   gap: 15px;
 
   align-items: center;
 
   padding: 15px;
+
   margin-bottom: 10px;
 
   border: 1px solid #dde3eb;
@@ -209,34 +318,47 @@ textarea:focus {
 
 .lead:hover {
   border-color: #78c8bd;
+
   background-color: #f8fffd;
 }
 
 .lead p {
   margin: 0;
+
   font-size: 13px;
 }
 
 .lead strong {
   display: block;
+
   margin-bottom: 5px;
 
   color: #718096;
+
   font-size: 11px;
 }
 
-/* CORES DAS PRIORIDADES */
+
+/* ========================= CORES DAS PRIORIDADES ========================= */
+
 .prioridade {
   display: inline-flex;
+
   align-items: center;
+
   gap: 6px;
+
   font-weight: bold;
 }
 
 .prioridade-ponto {
   width: 9px;
   height: 9px;
+
+  /* Transforma o quadrado num circulo. */
   border-radius: 50%;
+
+  /* Usa a mesma cor definida para cada prioridade. */
   background-color: currentColor;
 }
 
@@ -252,19 +374,29 @@ textarea:focus {
   color: #285d8f;
 }
 
-/* Ações do Lead */
+
+/* ========================= ACOES DO LEAD ========================= */
 
 .acoes-lead {
   display: flex;
+
+  align-items: center;
+
   gap: 8px;
 }
 
+/* Mantem os botoes de acao simples, sem caixa nem contorno. */
 .btn-ver,
 .btn-editar,
 .btn-apagar {
+  padding: 0;
+
   border: none;
+
   background: none;
+
   font-size: 12px;
+  font-weight: 500;
 }
 
 .btn-ver {
@@ -279,13 +411,16 @@ textarea:focus {
   color: #d14343;
 }
 
-/* =========================
-   MODAIS
-========================= */
+
+/* ========================= MODAIS ========================= */
 
 .modal {
+  /* Mantem a janela por cima de todo o ecra. */
   position: fixed;
+
+  /* Faz a janela ocupar toda a area disponivel do ecra. */
   inset: 0;
+
   z-index: 1000;
 
   display: flex;
@@ -299,18 +434,26 @@ textarea:focus {
 
 .modal-conteudo {
   width: 850px;
+
+  /* Impede a janela de ultrapassar praticamente toda a largura do ecra. */
   max-width: 95vw;
+
+  /* Impede a janela de ultrapassar 90% da altura do ecra. */
   max-height: 90vh;
 
+  /* Cria scroll dentro da janela quando o conteudo e demasiado grande. */
   overflow-y: auto;
 
   border-radius: 12px;
 
   background-color: white;
+
+  /* Cria uma sombra para destacar a janela do fundo. */
+  box-shadow: 0 20px 50px rgba(5, 18, 35, 0.2);
 }
 
 .modal-grande {
-  width: 950px;
+  width: 1050px;
 }
 
 .modal-pequeno {
@@ -322,13 +465,15 @@ textarea:focus {
   align-items: center;
   justify-content: space-between;
 
-  padding: 20px 25px;
+  padding: 22px 28px;
 
   border-bottom: 1px solid #e2e7ee;
 }
 
 .modal-cabecalho h2 {
   margin: 0;
+
+  font-size: 22px;
 }
 
 .modal-corpo {
@@ -337,7 +482,9 @@ textarea:focus {
 
 .modal-acoes {
   display: flex;
+
   justify-content: flex-end;
+
   gap: 10px;
 
   padding: 18px 25px;
@@ -346,85 +493,418 @@ textarea:focus {
 }
 
 .btn-fechar {
+  padding: 0;
+
   border: none;
+
   background: none;
 
   font-size: 22px;
 }
 
-/* =========================
-   FORMULÁRIOS DOS MODAIS
-========================= */
+/* ========================= FORMULARIOS DOS MODAIS ========================= */
 
 .form-grid {
   display: grid;
-  grid-template-columns: 160px 1fr 160px 1fr;
-  gap: 14px 18px;
 
-  padding: 25px;
+  /* Organiza cada linha como label | campo | label | campo. */
+  grid-template-columns: 160px 1fr 160px 1fr;
+
+  gap: 16px 20px;
+
+  padding: 28px 30px;
 }
 
-/* ALERTA DE CAMPOS OBRIGATORIOS */
+
+/* ========================= ALERTA CAMPOS OBRIGATORIOS ========================= */
+
 .form-obrigatorio {
+  /* Faz este elemento ocupar todas as colunas do grid. */
   grid-column: 1 / -1;
+
   margin: 0 0 2px;
+
   color: #687385;
-  font-size: 12px;
+
+  font-size: 10px;
 }
 
 .campo-obrigatorio::after {
+  /* Acrescenta automaticamente um asterisco aos campos obrigatorios. */
   content: " *";
+
   color: #d14343;
 }
 
 .form-grid label {
   align-self: center;
+
   font-weight: bold;
-  font-size: 13px;
+
+  font-size: 12px;
 }
 
 .form-grid input,
 .form-grid select,
 .form-grid textarea {
   width: 100%;
+
+  padding: 11px 12px;
+
+  font-size: 12px;
 }
 
 .form-acoes {
   grid-column: 1 / -1;
 
   display: flex;
+
   justify-content: flex-end;
+
   gap: 10px;
 
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
-/* =========================
-   MODAL VER
-========================= */
 
-.modal-grid {
+/* ========================= JANELA VER LEAD ========================= */
+
+/* Estas regras aplicam-se apenas a janela de visualizacao do Lead. */
+#modalVer .modal-conteudo {
+  width: 1050px;
+
+  /* Permite posicionar corretamente o botao X. */
+  position: relative;
+}
+
+/* Esconde o titulo "Detalhes do Lead" no cabecalho da janela Ver Lead. */
+#modalVer .modal-cabecalho h2 {
+  display: none;
+}
+
+/* Mantem o cabecalho apenas para o botao de fechar. */
+#modalVer .modal-cabecalho {
+  position: absolute;
+
+  top: 16px;
+  right: 18px;
+
+  z-index: 2;
+
+  padding: 0;
+
+  border-bottom: none;
+}
+
+/* Define o espaco interno do conteudo da janela Ver Lead. */
+#modalVer .modal-corpo {
+  padding: 30px 32px 22px;
+}
+
+/* Organiza o conteudo principal em duas colunas. */
+#modalVer .modal-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
+
+  grid-template-columns: 1.2fr 0.8fr;
+
+  gap: 10px;
 }
 
-.modal-bloco {
-  padding: 18px;
+/* Mantem o mesmo estilo visual nas caixas de informacao. */
+#modalVer .modal-bloco {
+  padding: 22px;
 
   border: 1px solid #e2e7ee;
-  border-radius: 8px;
+  border-radius: 7px;
 
   background-color: #f7f9fc;
 }
 
-.modal-bloco h3 {
-  margin-top: 0;
+#modalVer .modal-bloco h3 {
+  margin: 0 0 11px;
+
+  font-size: 15px;
+  font-weight: 700;
 }
 
-/* =========================
-   BOTÕES
-========================= */
+
+/* ========================= TOPO DO DETALHE DO LEAD ========================= */
+
+/* Coloca a informacao principal a esquerda e os indicadores a direita. */
+.detalhe-topo {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 16px;
+
+  padding-right: 30px;
+}
+
+.detalhe-info {
+  min-width: 0;
+}
+
+.detalhe-kicker {
+  margin: 0 0 3px;
+
+  color: #8490a0;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+}
+
+.detalhe-titulo {
+  margin: 0;
+
+  color: #162033;
+
+  font-size: 28px;
+  font-weight: 700;
+
+  line-height: 1.1;
+
+  letter-spacing: -0.03em;
+}
+
+.detalhe-subtitulo {
+  margin: 4px 0 0;
+
+  color: #7b8797;
+
+  font-size: 13px;
+}
+
+
+/* ========================= INDICADORES DO DETALHE ========================= */
+
+.detalhe-badges {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.badge-estado,
+.badge-prioridade {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 5px 9px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.badge-estado {
+  background-color: #dff5ef;
+
+  color: #07877b;
+}
+
+.badge-estado.perdido {
+  background-color: #fdeaea;
+
+  color: #d14343;
+}
+
+.badge-prioridade.quente {
+  background-color: #fdebec;
+
+  color: #d14343;
+}
+
+.badge-prioridade.morno {
+  background-color: #fff3d2;
+
+  color: #c88b00;
+}
+
+.badge-prioridade.frio {
+  background-color: #e9f1f9;
+
+  color: #285d8f;
+}
+
+
+/* ========================= CAMPOS DO DETALHE ========================= */
+
+/* Apresenta os dados de cada caixa em duas colunas. */
+.dados-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 9px 18px;
+}
+
+.dados-grid div {
+  min-width: 0;
+}
+
+/* Define o estilo do nome de cada campo. */
+.dados-grid span {
+  display: block;
+
+  margin-bottom: 2px;
+
+  color: #7c8796;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+}
+
+/* Define o estilo do valor de cada campo. */
+.dados-grid p {
+  margin: 0;
+
+  color: #162033;
+
+  font-size: 12px;
+
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* ========================= PERCURSO DO LEAD ========================= */
+
+.percurso-lead {
+  padding: 22px;
+
+  border: 1px solid #e2e7ee;
+  border-radius: 7px;
+
+  background-color: #f7f9fc;
+}
+
+.percurso-lead h3 {
+  margin: 0 0 12px;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.percurso-passos {
+  /* Permite criar a linha horizontal do percurso com ::before. */
+  position: relative;
+
+  display: grid;
+
+  /* Define as 6 etapas principais do percurso ate Ganho. */
+  grid-template-columns: repeat(6, 1fr);
+
+  margin-top: 12px;
+}
+
+/* Cria a linha horizontal que liga visualmente os estados. */
+.percurso-passos::before {
+  content: "";
+
+  position: absolute;
+
+  top: 5px;
+
+  left: 8%;
+
+  width: 84%;
+
+  height: 1px;
+
+  background-color: #d8dfe7;
+}
+
+.percurso-passo {
+  position: relative;
+
+  z-index: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+}
+
+.percurso-ponto {
+  width: 10px;
+  height: 10px;
+
+  margin-bottom: 6px;
+
+  border: 2px solid #d8dfe7;
+
+  border-radius: 50%;
+
+  background-color: white;
+}
+
+.percurso-passo span:last-child {
+  color: #98a2af;
+
+  font-size: 9px;
+}
+
+/* Identifica visualmente os estados ja ultrapassados. */
+.percurso-passo.concluido .percurso-ponto {
+  border-color: #07877b;
+
+  background-color: #07877b;
+}
+
+/* Identifica visualmente o estado atual. */
+.percurso-passo.atual .percurso-ponto {
+  border-color: #07877b;
+
+  background-color: #07877b;
+
+  box-shadow: 0 0 0 3px rgba(7, 135, 123, 0.12);
+}
+
+.percurso-passo.concluido span:last-child,
+.percurso-passo.atual span:last-child {
+  color: #07877b;
+
+  font-weight: 600;
+}
+
+
+/* ========================= ACOES DA JANELA VER LEAD ========================= */
+
+/* Define botoes mais compactos na zona de acoes da janela Ver Lead. */
+#modalVer .modal-acoes {
+  padding: 12px 20px;
+
+  gap: 8px;
+}
+
+#modalVer .btn-principal,
+#modalVer .btn-secundario,
+#modalVer .btn-perigo {
+  padding: 10px 17px;
+
+  font-size: 9px;
+}
+
+
+/* ========================= BOTOES DOS MODAIS ========================= */
 
 .btn-principal {
   padding: 10px 17px;
@@ -443,28 +923,77 @@ textarea:focus {
   border-radius: 6px;
 
   background-color: white;
+
+  color: #162033;
 }
 
 .btn-perigo {
-  padding: 10px 17px;
+  padding: 8px 14px;
 
   border: 1px solid #e5a2a2;
   border-radius: 6px;
 
   background-color: white;
+
   color: #d14343;
 }
 
-/* =========================
-   RESPONSIVIDADE
-========================= */
 
+/* ========================= RODAPE ========================= */
+
+footer {
+  min-height: 90px;
+
+  /* Mantem o alinhamento lateral do rodape com o conteudo principal. */
+  padding: 18px 7.5%;
+
+  display: flex;
+  align-items: center;
+
+  flex-shrink: 0;
+
+  background-color: #071a33;
+  color: white;
+}
+
+footer div {
+  /* Faz o conteudo interno ocupar toda a largura do rodape. */
+  width: 100%;
+
+  /* Mantem o texto alinhado a esquerda. */
+  text-align: left;
+}
+
+footer p {
+  margin: 5px 0;
+
+  font-size: 10px;
+
+  color: #d4dce6;
+}
+
+footer hr {
+  width: 100%;
+
+  margin: 9px 0;
+
+  border: 0;
+  border-top: 1px solid #49617c;
+}
+
+
+/* ========================= RESPONSIVIDADE ========================= */
+
+/* Aplica estas regras em ecras com 1000px ou menos. */
 @media (max-width: 1000px) {
+
   #indicadores {
+    /* Passa os indicadores de 5 colunas para 2. */
     grid-template-columns: repeat(2, 1fr);
   }
 
   .lead {
+    /* Passa os dados do Lead para duas colunas. */
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -473,22 +1002,30 @@ textarea:focus {
   }
 }
 
+
+/* Aplica estas regras em ecras de telemovel. */
 @media (max-width: 650px) {
+
   main {
     width: 92%;
   }
 
   .topo-pagina {
+    /* Coloca o titulo e o botao um por baixo do outro. */
     align-items: flex-start;
+
     gap: 20px;
+
     flex-direction: column;
   }
 
   #indicadores {
+    /* Mostra um indicador por linha. */
     grid-template-columns: 1fr;
   }
 
   .filtros {
+    /* Coloca a pesquisa e o filtro na vertical. */
     flex-direction: column;
   }
 
@@ -500,38 +1037,45 @@ textarea:focus {
   .lead,
   .modal-grid,
   .form-grid {
+    /* Passa o conteudo para uma unica coluna. */
     grid-template-columns: 1fr;
   }
 
   .form-acoes {
     grid-column: 1;
   }
-}
 
-/* RODAPÉ */
-footer {
-  min-height: 110px;
-  padding: 20px 8%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  .detalhe-topo {
+    flex-direction: column;
 
-  background-color: #071a33;
-  color: white;
-}
+    padding-right: 0;
+  }
 
-footer div {
-  width: 100%;
-  text-align: center;
-}
+  .detalhe-badges {
+    flex-wrap: wrap;
+  }
 
-footer p {
-  margin: 5px 0;
-}
+  .dados-grid {
+    grid-template-columns: 1fr;
+  }
 
-footer hr {
-  width: 100%;
-  margin: 10px auto;
-  border: 0;
-  border-top: 2px solid #49617c;
+  #modalVer .modal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Mostra 3 estados do percurso por linha no telemovel. */
+  .percurso-passos {
+    grid-template-columns: repeat(3, 1fr);
+
+    row-gap: 20px;
+  }
+
+  /* Retira a linha horizontal quando os estados ficam distribuidos em duas linhas. */
+  .percurso-passos::before {
+    display: none;
+  }
+
+  footer div {
+    width: 92%;
+  }
 }
