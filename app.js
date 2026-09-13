@@ -7,6 +7,8 @@ let idLeadEliminar = null; // lead selecionado para eliminar
 // FUNÇÕES PRINCIPAIS
 // ==========================
 
+// Cria e devolve um objeto Lead com todos os dados do formulário
+
 function criarLead(
   id,
   origem,
