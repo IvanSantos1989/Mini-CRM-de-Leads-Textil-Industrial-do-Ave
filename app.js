@@ -3,31 +3,11 @@ let leads = []; // array onde ficam armazenados os leads
 let idLeadSelecionado = null; // lead atualmente aberto ou editado
 let idLeadEliminar = null; // lead selecionado para eliminar
 
-
-// ==========================
 // FUNÇÕES PRINCIPAIS
-// ==========================
 
 // Cria e devolve um objeto Lead com todos os dados do formulário
-function criarLead(
-  id,
-  origem,
-  empresa,
-  nomeContacto,
-  email,
-  telefone,
-  setor,
-  numeroColaboradores,
-  tipoAtividade,
-  produto,
-  tamanhos,
-  cores,
-  personalizacao,
-  requisitosSeguranca,
-  orcamento,
-  comercialResponsavel,
-  observacoes,
-) {
+function criarLead(id, origem, empresa, nomeContacto, email, telefone, setor, numeroColaboradores, tipoAtividade,
+  produto, tamanhos, cores, personalizacao, requisitosSeguranca, orcamento, comercialResponsavel, observacoes,) {
   return {
     id: id,
     origem: origem,
@@ -51,7 +31,6 @@ function criarLead(
     estado: "Novo",
   };
 }
-
 
 // Calcula automaticamente a prioridade do Lead através do orçamento.
 // >= 10 000 € = Quente | >= 5 000 € = Morno | < 5 000 € = Frio
@@ -107,10 +86,6 @@ function obterDataAtual() {
 }
 
 
-// ==========================
-// LOCAL STORAGE
-// ==========================
-
 // Guarda o array no localStorage.
 // JSON.stringify transforma o array em texto, porque o localStorage guarda strings.
 function guardarLeads() {
@@ -129,10 +104,6 @@ function carregarLeads() {
 }
 
 
-// ==========================
-// PROCURAR LEAD
-// ==========================
-
 // Percorre o array até encontrar o Lead com o ID indicado
 function encontrarLead(id) {
   for (let i = 0; i < leads.length; i++) {
@@ -145,10 +116,8 @@ function encontrarLead(id) {
 }
 
 
-// ==========================
-// REGRA DE NEGÓCIO
-// ==========================
 
+// REGRA DE NEGÓCIO
 // Confirma se os campos necessários estão preenchidos antes de avançar
 // de "Levantamento de necessidades" para "Prova de Conceito".
 function validarLevantamento(lead) {
@@ -186,10 +155,7 @@ function validarLevantamento(lead) {
 }
 
 
-// ==========================
 // ALTERAR ESTADO
-// ==========================
-
 // Avança o Lead para o estado seguinte do processo comercial
 function avancarEstado(id) {
   let lead = encontrarLead(id);
@@ -205,12 +171,8 @@ function avancarEstado(id) {
     let camposEmFalta = validarLevantamento(lead);
 
     if (camposEmFalta.length > 0) {
-      alert(
-        "Não é possível avançar para Prova de Conceito.\n\n" +
-        "Preencha os seguintes campos:\n" +
-        camposEmFalta.join("\n")
-      );
-
+      alert("Não é possível avançar para Prova de Conceito.\n\n" +
+        "Preencha os seguintes campos:\n" + camposEmFalta.join("\n"));
       return;
     }
 
@@ -266,14 +228,16 @@ function marcarPerdido(id) {
 }
 
 
-// ==========================
 // INDICADORES / KPI
-// ==========================
-
 // Calcula a duração do ciclo de venda em dias
 function calcularDias(dataEntrada, dataConclusao) {
   let inicio = new Date(dataEntrada);
   let fim = new Date(dataConclusao);
+
+  // Ignora datas antigas ou incompletas que possam existir no localStorage.
+  if (Number.isNaN(inicio.getTime()) || Number.isNaN(fim.getTime())) {
+    return null;
+  }
 
   // A subtração de duas datas devolve a diferença em milissegundos
   let diferenca = fim - inicio;
@@ -300,9 +264,13 @@ function atualizarIndicadores() {
     if (leads[i].estado === "Ganho") {
       ganhos++;
 
-      if (leads[i].dataEntrada !== "" && leads[i].dataConclusao !== "") {
-        somaDias += calcularDias(leads[i].dataEntrada, leads[i].dataConclusao);
-        ganhosComData++;
+      if (leads[i].dataEntrada && leads[i].dataConclusao) {
+        let dias = calcularDias(leads[i].dataEntrada, leads[i].dataConclusao);
+
+        if (dias !== null) {
+          somaDias += dias;
+          ganhosComData++;
+        }
       }
     }
   }
@@ -327,14 +295,10 @@ function atualizarIndicadores() {
   document.getElementById("cicloMedio").textContent = cicloMedio + " dias";
 }
 
-// ==========================
-// MOSTRAR LEADS
-// ==========================
 
 // Mostra os Leads na lista, aplicando pesquisa e filtro por estado
 function mostrarLeads() {
   let listaLeads = document.getElementById("listaLeads");
-
   let pesquisa = document.getElementById("pesquisa").value.toLowerCase().trim();
   let filtroEstado = document.getElementById("filtroEstado").value;
 
@@ -348,8 +312,7 @@ function mostrarLeads() {
 
     // Verifica se a empresa ou o contacto contêm o texto pesquisado
     let correspondePesquisa =
-      lead.empresa.toLowerCase().includes(pesquisa) ||
-      lead.nomeContacto.toLowerCase().includes(pesquisa);
+      lead.empresa.toLowerCase().includes(pesquisa) || lead.nomeContacto.toLowerCase().includes(pesquisa);
 
     // Se não houver filtro, mostra todos.
     // Se houver filtro, compara com o estado do Lead.
@@ -390,10 +353,7 @@ function mostrarLeads() {
 }
 
 
-// ==========================
 // PERCURSO DO LEAD
-// ==========================
-
 // Atualiza visualmente o percurso de acordo com o estado atual
 function atualizarPercursoLead(estadoAtual) {
   let estados = ["Novo", "Levantamento de necessidades", "Prova de Conceito", "Proposta", "Negociação", "Ganho"];
@@ -415,10 +375,7 @@ function atualizarPercursoLead(estadoAtual) {
 }
 
 
-// ==========================
 // VER LEAD
-// ==========================
-
 function verLead(id) {
   let lead = encontrarLead(id);
 
@@ -498,10 +455,7 @@ function verLead(id) {
 }
 
 
-// ==========================
 // EDITAR LEAD
-// ==========================
-
 function editarLead(id) {
   let lead = encontrarLead(id);
 
@@ -536,10 +490,7 @@ function editarLead(id) {
 }
 
 
-// ==========================
 // ELIMINAR LEAD
-// ==========================
-
 function eliminarLead(id) {
   let lead = encontrarLead(id);
 
@@ -558,32 +509,22 @@ function eliminarLead(id) {
   modalEliminar.hidden = false;
 }
 
-// ==========================
-// ELEMENTOS DO HTML
-// ==========================
 
+// ELEMENTOS DO HTML
 const btnNovoLead = document.getElementById("btnNovoLead");
 const btnCancelar = document.getElementById("btnCancelar");
-
 const novoLeadform = document.getElementById("novoLead");
-
 const formLead = document.getElementById("formLead");
 const formEditarLead = document.getElementById("formEditarLead");
-
 const modalVer = document.getElementById("modalVer");
 const modalEditar = document.getElementById("modalEditar");
 const modalEliminar = document.getElementById("modalEliminar");
-
 const textoEliminar = document.getElementById("textoEliminar");
-
 const btnAvancarVer = document.getElementById("btnAvancarVer");
 const btnPerdidoVer = document.getElementById("btnPerdidoVer");
 
 
-// ==========================
 // EVENTOS NOVO LEAD
-// ==========================
-
 // Abre o formulário de criação de um novo Lead
 btnNovoLead.addEventListener("click", function () {
   novoLeadform.hidden = false;
@@ -599,10 +540,7 @@ btnCancelar.addEventListener("click", function () {
 
 // Criar novo Lead
 formLead.addEventListener("submit", function (event) {
-
-  // Impede o envio tradicional do formulário
-  // e evita que a página seja recarregada
-  event.preventDefault();
+  event.preventDefault(); // Impede o envio tradicional do formulário e evita que a página seja recarregada
 
   // Vai buscar os valores preenchidos no formulário
   let empresa = document.getElementById("empresa").value.trim();
@@ -623,10 +561,7 @@ formLead.addEventListener("submit", function (event) {
   let observacoes = document.getElementById("observacoes").value.trim();
 
 
-  // ==========================
   // VALIDAÇÃO
-  // ==========================
-
   // Verifica se os campos obrigatórios estão preenchidos
   if (
     empresa === "" ||
@@ -643,10 +578,7 @@ formLead.addEventListener("submit", function (event) {
   }
 
 
-  // ==========================
   // CAMPOS NUMÉRICOS
-  // ==========================
-
   let telefoneFinal = "";
   let colaboradoresFinal = "";
 
@@ -661,30 +593,10 @@ formLead.addEventListener("submit", function (event) {
   }
 
 
-  // ==========================
   // CRIAÇÃO DO LEAD
-  // ==========================
-
   // Cria o objeto Lead com os dados recolhidos
-  let novoLead = criarLead(
-    gerarId(),
-    origem,
-    empresa,
-    nomeContacto,
-    email,
-    telefoneFinal,
-    setor,
-    colaboradoresFinal,
-    tipoAtividade,
-    produto,
-    tamanhos,
-    cores,
-    personalizacao,
-    requisitosSeguranca,
-    Number(orcamento),
-    comercial,
-    observacoes
-  );
+  let novoLead = criarLead(gerarId(), origem, empresa, nomeContacto, email, telefoneFinal, setor, colaboradoresFinal,
+    tipoAtividade, produto, tamanhos, cores, personalizacao, requisitosSeguranca, Number(orcamento), comercial, observacoes);
 
   // Adiciona o novo Lead ao array
   leads.push(novoLead);
@@ -701,49 +613,37 @@ formLead.addEventListener("submit", function (event) {
 });
 
 
-// ==========================
 // EVENTOS MODAL VER
-// ==========================
-
 // Fecha o modal Ver
 document.getElementById("btnFecharVer").addEventListener("click", function () {
   modalVer.hidden = true;
 });
-
 
 // Abre a edição do Lead selecionado
 document.getElementById("btnEditarVer").addEventListener("click", function () {
   editarLead(idLeadSelecionado);
 });
 
-
 // Avança o Lead para o estado seguinte
 btnAvancarVer.addEventListener("click", function () {
   avancarEstado(idLeadSelecionado);
 });
-
 
 // Marca o Lead como Perdido
 btnPerdidoVer.addEventListener("click", function () {
   marcarPerdido(idLeadSelecionado);
 });
 
-
 // Abre a confirmação para eliminar
 document.getElementById("btnEliminarVer").addEventListener("click", function () {
   eliminarLead(idLeadSelecionado);
 });
 
-
-// ==========================
 // EVENTOS EDITAR
-// ==========================
-
 // Fecha o modal de edição
 document.getElementById("btnFecharEditar").addEventListener("click", function () {
   modalEditar.hidden = true;
 });
-
 
 // Cancela a edição
 document.getElementById("btnCancelarEditar").addEventListener("click", function () {
@@ -752,9 +652,7 @@ document.getElementById("btnCancelarEditar").addEventListener("click", function 
 
 // Guardar alterações do Lead
 formEditarLead.addEventListener("submit", function (event) {
-
-  // Impede o formulário de recarregar a página
-  event.preventDefault();
+  event.preventDefault(); // Impede o formulário de recarregar a página
 
   // Procura o Lead que está a ser editado
   let lead = encontrarLead(idLeadSelecionado);
@@ -762,7 +660,6 @@ formEditarLead.addEventListener("submit", function (event) {
   if (lead === null) {
     return;
   }
-
 
   // Vai buscar os valores editados
   let empresa = document.getElementById("editEmpresa").value.trim();
@@ -774,10 +671,7 @@ formEditarLead.addEventListener("submit", function (event) {
   let comercial = document.getElementById("editComercialResponsavel").value;
 
 
-  // ==========================
   // VALIDAÇÃO
-  // ==========================
-
   if (
     empresa === "" ||
     nomeContacto === "" ||
@@ -793,10 +687,7 @@ formEditarLead.addEventListener("submit", function (event) {
   }
 
 
-  // ==========================
   // ATUALIZAR O LEAD
-  // ==========================
-
   lead.empresa = empresa;
   lead.nomeContacto = nomeContacto;
   lead.email = email;
@@ -827,30 +718,22 @@ formEditarLead.addEventListener("submit", function (event) {
 });
 
 
-// ==========================
 // EVENTOS ELIMINAR
-// ==========================
-
 // Cancela a eliminação
 document.getElementById("btnCancelarEliminar").addEventListener("click", function () {
   modalEliminar.hidden = true;
   idLeadEliminar = null;
 });
 
-
 // Confirma a eliminação
 document.getElementById("btnConfirmarEliminar").addEventListener("click", function () {
 
   // Percorre os Leads até encontrar o que queremos eliminar
   for (let i = 0; i < leads.length; i++) {
-
     if (leads[i].id === idLeadEliminar) {
 
-      // Remove 1 elemento do array na posição i
-      leads.splice(i, 1);
-
-      // Como já encontrou o Lead, termina o ciclo
-      break;
+      leads.splice(i, 1); // Remove 1 elemento do array na posição i
+      break; // Como já encontrou o Lead, termina o ciclo
     }
   }
 
@@ -866,15 +749,11 @@ document.getElementById("btnConfirmarEliminar").addEventListener("click", functi
 });
 
 
-// ==========================
 // PESQUISA E FILTRO
-// ==========================
-
 // Atualiza a lista à medida que o utilizador escreve
 document.getElementById("pesquisa").addEventListener("input", function () {
   mostrarLeads();
 });
-
 
 // Atualiza a lista quando o estado selecionado muda
 document.getElementById("filtroEstado").addEventListener("change", function () {
@@ -882,12 +761,6 @@ document.getElementById("filtroEstado").addEventListener("change", function () {
 });
 
 
-// ==========================
 // INÍCIO DA APLICAÇÃO
-// ==========================
-
-// Recupera os Leads guardados no localStorage
-carregarLeads();
-
-// Mostra os Leads e calcula os indicadores
-mostrarLeads();
+carregarLeads(); // Recupera os Leads guardados no localStorage
+mostrarLeads(); // Mostra os Leads e calcula os indicadores

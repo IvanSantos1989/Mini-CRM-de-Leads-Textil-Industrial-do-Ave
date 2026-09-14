@@ -3,38 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Mini CRM de Leads - Têxtil Industrial do Ave</title>
-
     <link rel="stylesheet" href="style.css" />
-    <script src="app.js" defer></script>
-    <!-- defer executa o JavaScript depois do HTML estar carregado -->
+    <script src="app.js" defer></script> <!-- defer executa o JavaScript depois do HTML estar carregado -->
   </head>
 
   <body>
-
-    <!-- CABECALHO -->
+    <!-- CABEÇALHO -->
     <header>
       <h2>TÊXTIL CRM</h2>
       <span>Gestão de Leads</span>
     </header>
 
     <main>
-
       <!-- TITULO -->
       <section class="topo-pagina">
         <div>
           <h1>Gestão de Leads</h1>
           <p>Acompanhe e atualize as oportunidades comerciais</p>
         </div>
-
         <button id="btnNovoLead">+ Novo Lead</button>
       </section>
 
-
       <!-- INDICADORES -->
       <section id="indicadores">
-
         <div>
           <p>Total de leads</p>
           <h2 id="totalLeads">0</h2>
@@ -59,9 +51,7 @@
           <p>Ciclo médio</p>
           <h2 id="cicloMedio">0 dias</h2>
         </div>
-
       </section>
-
 
       <!-- LISTA DE LEADS -->
       <section id="gestaoLeads">
@@ -69,12 +59,7 @@
         <h2>Leads</h2>
 
         <div class="filtros">
-
-          <input
-            type="text"
-            id="pesquisa"
-            placeholder="Pesquisar por empresa ou contacto..."
-          />
+          <input type="text" id="pesquisa" placeholder="Pesquisar por empresa ou contacto..."/>
 
           <select id="filtroEstado">
             <option value="">Estado: Todos</option>
@@ -86,22 +71,14 @@
             <option value="Ganho">Ganho</option>
             <option value="Perdido">Perdido</option>
           </select>
-
         </div>
 
         <div id="listaLeads"></div>
-
       </section>
-
     </main>
 
-
-    <!-- =========================
-         MODAL NOVO LEAD
-    ========================== -->
-
+    <!-- MODAL(pop-up) NOVO LEAD -->
     <div id="novoLead" class="modal" hidden>
-
       <div class="modal-conteudo modal-grande">
 
         <div class="modal-cabecalho">
@@ -109,11 +86,8 @@
         </div>
 
         <form id="formLead" class="form-grid">
-
           <!-- Indica os campos obrigatorios -->
-          <p class="form-obrigatorio">
-            Os campos assinalados com * são obrigatórios.
-          </p>
+          <p class="form-obrigatorio">Os campos assinalados com * são obrigatórios.</p>
 
           <label class="campo-obrigatorio" for="empresa">Nome da empresa:</label>
           <input type="text" id="empresa" required />
@@ -204,40 +178,24 @@
           <textarea id="observacoes" rows="3"></textarea>
 
           <div class="form-acoes">
-            <button type="button" class="btn-secundario" id="btnCancelar">
-              Cancelar
-            </button>
-
-            <button type="submit" class="btn-principal">
-              Guardar Lead
-            </button>
+            <button type="button" class="btn-secundario" id="btnCancelar">Cancelar</button>
+            <button type="submit" class="btn-principal">Guardar Lead</button>
           </div>
 
         </form>
-
       </div>
-
     </div>
 
-
-    <!-- =========================
-         JANELA VER LEAD
-    ========================== -->
-
+    <!-- JANELA VER LEAD(pop-up) -->
     <div id="modalVer" class="modal" hidden>
-
       <div class="modal-conteudo">
 
         <div class="modal-cabecalho">
           <h2>Detalhes do Lead</h2>
-
-          <button type="button" class="btn-fechar" id="btnFecharVer">
-            ×
-          </button>
+          <button type="button" class="btn-fechar" id="btnFecharVer">X</button>
         </div>
 
         <div class="modal-corpo">
-
           <!-- TOPO DO LEAD -->
           <div class="detalhe-topo">
 
@@ -255,8 +213,7 @@
           </div>
 
           <div class="modal-grid">
-
-            <!-- DADOS DO CLIENTE -->
+            <!-- DADOS DO CLIENTE (quando clica em ver) -->
             <div class="modal-bloco">
               <h3>Dados do Cliente</h3>
 
@@ -312,58 +269,30 @@
             </div>
 
           </div>
-
         </div>
 
         <div class="modal-acoes">
-
-          <button type="button" class="btn-perigo" id="btnEliminarVer">
-            Eliminar
-          </button>
-
-          <button type="button" class="btn-secundario" id="btnEditarVer">
-            Editar
-          </button>
-
-          <button type="button" class="btn-secundario" id="btnPerdidoVer">
-            Marcar perdido
-          </button>
-
-          <button type="button" class="btn-principal" id="btnAvancarVer">
-            Avançar estado
-          </button>
-
+          <button type="button" class="btn-perigo" id="btnEliminarVer">Eliminar</button>
+          <button type="button" class="btn-secundario" id="btnEditarVer">Editar</button>
+          <button type="button" class="btn-secundario" id="btnPerdidoVer">Marcar perdido</button>
+          <button type="button" class="btn-principal" id="btnAvancarVer">Avançar estado</button>
         </div>
 
       </div>
-
     </div>
 
-
-    <!-- =========================
-         MODAL EDITAR LEAD
-    ========================== -->
-
+    <!-- MODAL EDITAR LEAD (pop-up) -->
     <div id="modalEditar" class="modal" hidden>
-
       <div class="modal-conteudo modal-grande">
 
         <div class="modal-cabecalho">
-
           <h2>Editar Lead</h2>
-
-          <button type="button" class="btn-fechar" id="btnFecharEditar">
-            ×
-          </button>
-
+          <button type="button" class="btn-fechar" id="btnFecharEditar">X</button>
         </div>
 
         <form id="formEditarLead" class="form-grid">
-
           <!-- Indica os campos obrigatorios -->
-          <p class="form-obrigatorio">
-            Os campos assinalados com * são obrigatórios.
-          </p>
+          <p class="form-obrigatorio">Os campos assinalados com * são obrigatórios.</p>
 
           <label class="campo-obrigatorio" for="editEmpresa">Nome da empresa:</label>
           <input type="text" id="editEmpresa" required />
@@ -454,30 +383,17 @@
           <textarea id="editObservacoes" rows="3"></textarea>
 
           <div class="form-acoes">
-
-            <button type="button" class="btn-secundario" id="btnCancelarEditar">
-              Cancelar
-            </button>
-
-            <button type="submit" class="btn-principal">
-              Guardar alterações
-            </button>
-
+            <button type="button" class="btn-secundario" id="btnCancelarEditar">Cancelar</button>
+            <button type="submit" class="btn-principal">Guardar alterações</button>
           </div>
 
         </form>
-
       </div>
-
     </div>
 
 
-    <!-- =========================
-         MODAL ELIMINAR
-    ========================== -->
-
+    <!-- MODAL ELIMINAR (pop-up) -->
     <div id="modalEliminar" class="modal" hidden>
-
       <div class="modal-conteudo modal-pequeno">
 
         <div class="modal-cabecalho">
@@ -485,43 +401,25 @@
         </div>
 
         <div class="modal-corpo">
-          <p id="textoEliminar"></p>
-          <p>Esta ação não pode ser anulada.</p>
+          <p id="textoEliminar"></p> <p>Esta ação não pode ser anulada.</p>
         </div>
 
         <div class="modal-acoes">
-
-          <button type="button" class="btn-secundario" id="btnCancelarEliminar">
-            Cancelar
-          </button>
-
-          <button type="button" class="btn-perigo" id="btnConfirmarEliminar">
-            Eliminar
-          </button>
-
+          <button type="button" class="btn-secundario" id="btnCancelarEliminar">Cancelar</button>
+          <button type="button" class="btn-perigo" id="btnConfirmarEliminar">Eliminar</button>
         </div>
 
       </div>
-
     </div>
 
 
     <!-- RODAPE -->
     <footer>
-
       <div>
-
-        <p>
-          &copy; 2026 CESAE + LOBA CRM ACADEMY | Fundamentos de Programação |
-          São João da Madeira, Portugal
-        </p>
-
+        <p>&copy; 2026 CESAE + LOBA CRM ACADEMY | Fundamentos de Programação | São João da Madeira, Portugal</p>
         <hr />
-
         <p>Desenvolvido por: Catarina Marques & Ivanildo Silva</p>
-
       </div>
-
     </footer>
 
   </body>
