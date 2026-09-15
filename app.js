@@ -167,6 +167,27 @@ function validarLevantamento(lead) {
 }
 
 
+// ========================= CELEBRACAO LEAD GANHO =========================
+// Mostra o GIF "WINNING" durante 3 segundos quando um Lead passa para Ganho.
+// Esta funcao nao altera dados do Lead: controla apenas a celebracao visual.
+function mostrarCelebracaoGanho() {
+  let celebracao = document.getElementById("celebracaoGanho");
+
+  // Se o elemento nao existir no HTML, termina sem provocar erro no CRM.
+  if (celebracao === null) {
+    return;
+  }
+
+  // Mostra a camada com o GIF por cima do CRM.
+  celebracao.hidden = false;
+
+  // Ao fim de 3 segundos, volta a esconder automaticamente a celebracao.
+  setTimeout(function () {
+    celebracao.hidden = true;
+  }, 3000);
+}
+
+
 // ALTERAR ESTADO
 // Avanca o Lead para a etapa seguinte do processo comercial.
 function avancarEstado(id) {
@@ -208,6 +229,9 @@ function avancarEstado(id) {
 
     // Quando o Lead fica Ganho, guarda automaticamente a data de conclusao.
     lead.dataConclusao = obterDataAtual();
+
+    // CELEBRACAO: mostra o GIF "WINNING" apenas quando o Lead acaba de ser ganho.
+    mostrarCelebracaoGanho();
 
   } else {
 

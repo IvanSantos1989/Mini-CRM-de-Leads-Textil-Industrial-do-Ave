@@ -493,13 +493,15 @@ textarea:focus {
 }
 
 .btn-fechar {
-  padding: 0;
-
-  border: none;
+  border: 0;
 
   background: none;
 
-  font-size: 22px;
+  padding: 4px 8px;
+
+  font-size: 20px;
+  
+  line-height: 1;
 }
 
 /* ========================= FORMULARIOS DOS MODAIS ========================= */
@@ -1078,4 +1080,42 @@ footer hr {
   footer div {
     width: 92%;
   }
+}
+
+/* ========================= CELEBRACAO LEAD GANHO ========================= */
+/* Camada que aparece por cima do CRM quando um Lead passa para "Ganho". */
+.celebracao-ganho {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: rgba(5, 18, 35, 0.68);
+}
+
+/* Garante que o atributo hidden continua a esconder a celebracao. */
+.celebracao-ganho[hidden] {
+  display: none !important;
+}
+
+/* Pequena entrada do GIF para a celebracao nao aparecer de forma brusca. */
+.celebracao-ganho-conteudo {
+  animation: celebracaoGanhoEntrada 0.28s ease-out;
+}
+
+/* Tamanho responsivo do GIF: funciona também em telemóvel. */
+.celebracao-ganho img {
+  display: block;
+  width: min(430px, 88vw);
+  max-height: 68vh;
+  object-fit: contain;
+  border-radius: 15px;
+  box-shadow: 0 25px 80px rgba(5, 18, 35, 0.45);
+}
+
+@keyframes celebracaoGanhoEntrada {
+  from { opacity: 0; transform: scale(0.70); }
+  to { opacity: 1; transform: scale(1); }
 }
