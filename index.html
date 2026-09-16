@@ -49,7 +49,7 @@
 
         <div>
           <p>Ciclo médio</p>
-          <h2 id="cicloMedio">0 dias</h2>
+          <h2 id="cicloMedio">-</h2>
         </div>
       </section>
 
@@ -98,8 +98,10 @@
           <label class="campo-obrigatorio" for="email">Email:</label>
           <input type="email" id="email" required />
 
+          <label for="codigoPais">Código do país:</label>
+          <input type="text" id="codigoPais" maxlength="4" inputmode="numeric" placeholder="+351" />
           <label for="telefone">Telefone:</label>
-          <input type="number" id="telefone" />
+          <input type="text" id="telefone" maxlength="9" inputmode="numeric" placeholder="912345678" />
 
           <label class="campo-obrigatorio" for="origem">Origem do Lead:</label>
           <select id="origem" required>
@@ -175,7 +177,7 @@
           </select>
 
           <label for="observacoes">Observações:</label>
-          <textarea id="observacoes" rows="3"></textarea>
+          <textarea id="observacoes" rows="2"></textarea>
 
           <div class="form-acoes">
             <button type="button" class="btn-secundario" id="btnCancelar">Cancelar</button>
@@ -239,7 +241,14 @@
                 <div><span>Produto</span><p id="verProduto"></p></div>
                 <div><span>Segurança</span><p id="verSeguranca"></p></div>
                 <div><span>Tamanhos</span><p id="verTamanhos"></p></div>
+
+                <div>
+                <span>Observações</span>
+                <p id="verObservacoes"></p>
               </div>
+              </div>
+
+              
             </div>
 
             <!-- INFORMACAO COMERCIAL -->
@@ -303,8 +312,10 @@
           <label class="campo-obrigatorio" for="editEmail">Email:</label>
           <input type="email" id="editEmail" required />
 
+          <label for="editCodigoPais">Código do país: +</label>
+          <input type="text" id="editCodigoPais" maxlength="4" inputmode="numeric" placeholder="+351" />
           <label for="editTelefone">Telefone:</label>
-          <input type="number" id="editTelefone" />
+          <input type="text" id="editTelefone" maxlength="9" inputmode="numeric" placeholder="912345678" />
 
           <label class="campo-obrigatorio" for="editOrigem">Origem do Lead:</label>
           <select id="editOrigem" required>

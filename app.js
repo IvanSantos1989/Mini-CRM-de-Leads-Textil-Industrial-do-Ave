@@ -8,7 +8,7 @@ let idLeadEliminar = null; // Guarda o ID do Lead escolhido para eliminar.
 
 
 // Cria um novo Lead com todos os dados recebidos do formulario.
-function criarLead(id, origem, empresa, nomeContacto, email, telefone, setor, numeroColaboradores, tipoAtividade,
+function criarLead(id, origem, empresa, nomeContacto, email, codigoPais, telefone, setor, numeroColaboradores, tipoAtividade,
   produto, tamanhos, cores, personalizacao, requisitosSeguranca, orcamento, comercialResponsavel, observacoes,) {
   return {
     id: id,
@@ -16,6 +16,7 @@ function criarLead(id, origem, empresa, nomeContacto, email, telefone, setor, nu
     empresa: empresa,
     nomeContacto: nomeContacto,
     email: email,
+    codigoPais: codigoPais,
     telefone: telefone,
     setor: setor,
     numeroColaboradores: numeroColaboradores,
@@ -50,13 +51,38 @@ function qualificar(lead) {
 
 
 // Prepara a prioridade para aparecer visualmente com a classe CSS correspondente.
-function mostrarPrioridade(lead) {
+function criarPrioridade(lead) {
   let prioridade = qualificar(lead);
 
   // Transforma, por exemplo, "Morno" em "morno" para usar como classe CSS.
   let classePrioridade = prioridade.toLowerCase();
 
-  return "<span class='prioridade prioridade-" + classePrioridade + "'><span class='prioridade-ponto'></span>" + prioridade + "</span>";
+  // Cria o elemento que vai mostrar a prioridade.
+  let spanPrioridade = document.createElement("span");
+  spanPrioridade.className = "prioridade prioridade-" + classePrioridade;
+
+  // Cria o ponto colorido da prioridade.
+  let ponto = document.createElement("span");
+  ponto.className = "prioridade-ponto";
+
+  spanPrioridade.appendChild(ponto);
+  spanPrioridade.appendChild(document.createTextNode(prioridade));
+
+  return spanPrioridade;
+}
+
+
+// Cria um campo da lista com o titulo e respetivo valor.
+function criarCampoLista(titulo, valor) {
+  let campo = document.createElement("p");
+
+  let tituloCampo = document.createElement("strong");
+  tituloCampo.textContent = titulo;
+
+  campo.appendChild(tituloCampo);
+  campo.appendChild(document.createTextNode(valor));
+
+  return campo;
 }
 
 
@@ -104,9 +130,27 @@ function guardarLeads() {
 function carregarLeads() {
   let dados = localStorage.getItem("leads");
 
-  // Se existirem dados guardados, transforma o texto novamente num array JavaScript.
-  if (dados !== null) {
-    leads = JSON.parse(dados);
+  if (dados === null) { // Se nao existirem dados guardados, termina a função.
+    return;
+  }
+
+  try {
+    // Tenta transformar o texto guardado novamente num array JavaScript.
+    let dadosConvertidos = JSON.parse(dados);
+
+    // Confirma se os dados recuperados sao realmente um array.
+    if (Array.isArray(dadosConvertidos)) {
+      leads = dadosConvertidos;
+    } else {
+      leads = [];
+    }
+
+  } catch (erro) {
+    // Se os dados estiverem invalidos, mantem a aplicacao funcional com uma lista vazia.
+    leads = [];
+
+    console.error("Erro ao carregar os Leads do localStorage:", erro);
+    alert("Erro ao carregar as leads!")
   }
 }
 
@@ -128,6 +172,42 @@ function encontrarLead(id) {
 }
 
 // REGRA DE NEGOCIO
+// Valida o telefone quando este estiver preenchido.
+function validarTelefone(telefone) {
+
+  // O telefone e opcional, por isso vazio e considerado valido.
+  if (telefone === "") {
+    return true;
+  }
+
+  // Se estiver preenchido, deve conter exatamente 9 digitos.
+  if (telefone.length !== 9 || isNaN(telefone)) {
+    return false;
+  }
+
+  return true;
+}
+
+
+// Verifica se ja existe outro Lead com o mesmo email.
+function emailJaExiste(email, idIgnorar) {
+
+  // Percorre todos os Leads para comparar os emails.
+  for (let i = 0; i < leads.length; i++) {
+
+    // Ignora o proprio Lead durante a edicao.
+    if (
+      leads[i].email.toLowerCase() === email.toLowerCase() &&
+      leads[i].id !== idIgnorar
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
 // Verifica se os campos necessarios estao preenchidos antes de o Lead avancar para Prova de Conceito.
 function validarLevantamento(lead) {
   let camposEmFalta = [];
@@ -351,7 +431,13 @@ function atualizarIndicadores() {
   document.getElementById("valorPotencial").textContent = valorAtivo.toLocaleString("pt-PT") + " €";
   document.getElementById("leadsGanhos").textContent = ganhos;
   document.getElementById("taxaConversao").textContent = taxaConversao + "%";
-  document.getElementById("cicloMedio").textContent = cicloMedio + " dias";
+
+    // So mostra o ciclo medio quando existir pelo menos um Lead ganho com datas validas.
+  if (ganhosComData > 0) {
+    document.getElementById("cicloMedio").textContent = cicloMedio + " dias";
+  } else {
+    document.getElementById("cicloMedio").textContent = "—";
+  }
 }
 
 // Mostra os Leads na lista e aplica pesquisa e filtro por estado.
@@ -361,7 +447,7 @@ function mostrarLeads() {
   let filtroEstado = document.getElementById("filtroEstado").value;
 
   // Limpa a lista antes de a voltar a construir.
-  listaLeads.innerHTML = "";
+  listaLeads.textContent = "";
 
   let encontrados = 0;
 
@@ -371,10 +457,12 @@ function mostrarLeads() {
 
     // Verifica se a empresa ou o contacto contem o texto pesquisado.
     let correspondePesquisa =
-      lead.empresa.toLowerCase().includes(pesquisa) || lead.nomeContacto.toLowerCase().includes(pesquisa);
+      lead.empresa.toLowerCase().includes(pesquisa) ||
+      lead.nomeContacto.toLowerCase().includes(pesquisa);
 
     // Sem filtro mostra todos. Com filtro, compara o estado.
-    let correspondeEstado = filtroEstado === "" || lead.estado === filtroEstado;
+    let correspondeEstado =
+      filtroEstado === "" || lead.estado === filtroEstado;
 
     // So mostra o Lead se cumprir a pesquisa e o filtro.
     if (correspondePesquisa && correspondeEstado) {
@@ -384,28 +472,100 @@ function mostrarLeads() {
       let divLead = document.createElement("div");
       divLead.className = "lead";
 
-      // Preenche o bloco com os dados principais e os botoes.
-      divLead.innerHTML =
-        "<p><strong>Empresa / Contacto</strong>" + lead.empresa + "<br>" + lead.nomeContacto + "</p>" +
-        "<p><strong>Setor</strong>" + lead.setor + "</p>" +
-        "<p><strong>Valor</strong>" + Number(lead.orcamento).toLocaleString("pt-PT") + " €</p>" +
-        "<p><strong>Prioridade</strong>" + mostrarPrioridade(lead) + "</p>" +
-        "<p><strong>Estado</strong>" + lead.estado + "</p>" +
-        "<div class='acoes-lead'>" +
-          "<button class='btn-ver' onclick='verLead(" + lead.id + ")'>Ver</button>" +
-          "<button class='btn-editar' onclick='editarLead(" + lead.id + ")'>Editar</button>" +
-          "<button class='btn-apagar' onclick='eliminarLead(" + lead.id + ")'>Apagar</button>" +
-        "</div>";
+
+      // Cria o campo Empresa / Contacto.
+      let campoEmpresa = document.createElement("p");
+
+      let tituloEmpresa = document.createElement("strong");
+      tituloEmpresa.textContent = "Empresa / Contacto";
+
+      campoEmpresa.appendChild(tituloEmpresa);
+      campoEmpresa.appendChild(document.createTextNode(lead.empresa));
+      campoEmpresa.appendChild(document.createElement("br"));
+      campoEmpresa.appendChild(document.createTextNode(lead.nomeContacto));
+
+      divLead.appendChild(campoEmpresa);
+
+
+      // Cria os restantes campos apresentados na lista.
+      divLead.appendChild(criarCampoLista("Setor", lead.setor));
+
+      divLead.appendChild(
+        criarCampoLista(
+          "Valor",
+          Number(lead.orcamento).toLocaleString("pt-PT") + " €"
+        )
+      );
+
+
+      // Cria o campo da prioridade.
+      let campoPrioridade = document.createElement("p");
+
+      let tituloPrioridade = document.createElement("strong");
+      tituloPrioridade.textContent = "Prioridade";
+
+      campoPrioridade.appendChild(tituloPrioridade);
+      campoPrioridade.appendChild(criarPrioridade(lead));
+
+      divLead.appendChild(campoPrioridade);
+      divLead.appendChild(criarCampoLista("Estado", lead.estado));
+
+
+      // Cria a area dos botoes.
+      let acoes = document.createElement("div");
+      acoes.className = "acoes-lead";
+
+
+      // Cria o botao Ver e associa o respetivo evento.
+      let btnVer = document.createElement("button");
+      btnVer.className = "btn-ver";
+      btnVer.textContent = "Ver";
+
+      btnVer.addEventListener("click", function () {
+        verLead(lead.id);
+      });
+
+
+      // Cria o botao Editar e associa o respetivo evento.
+      let btnEditar = document.createElement("button");
+      btnEditar.className = "btn-editar";
+      btnEditar.textContent = "Editar";
+
+      btnEditar.addEventListener("click", function () {
+        editarLead(lead.id);
+      });
+
+
+      // Cria o botao Apagar e associa o respetivo evento.
+      let btnApagar = document.createElement("button");
+      btnApagar.className = "btn-apagar";
+      btnApagar.textContent = "Apagar";
+
+      btnApagar.addEventListener("click", function () {
+        eliminarLead(lead.id);
+      });
+
+
+      acoes.appendChild(btnVer);
+      acoes.appendChild(btnEditar);
+      acoes.appendChild(btnApagar);
+
+      divLead.appendChild(acoes);
 
       // Adiciona o bloco deste Lead a lista.
       listaLeads.appendChild(divLead);
     }
   }
 
+
   // Se nenhum Lead corresponder, mostra uma mensagem.
   if (encontrados === 0) {
-    listaLeads.innerHTML = "<p>Nenhum Lead encontrado.</p>";
+    let mensagem = document.createElement("p");
+    mensagem.textContent = "Nenhum Lead encontrado.";
+
+    listaLeads.appendChild(mensagem);
   }
+
 
   // Atualiza tambem os indicadores.
   atualizarIndicadores();
@@ -453,7 +613,11 @@ function verLead(id) {
   idLeadSelecionado = id;
 
   // Define valores alternativos caso alguns campos estejam vazios.
-  let telefone = lead.telefone || "—";
+  let telefone = "—";
+  if (lead.telefone) { // Junta o codigo do pais ao telefone quando este estiver preenchido.
+    telefone = (lead.codigoPais || "+351") + " " + lead.telefone;
+  }
+
   let colaboradores = lead.numeroColaboradores || "—";
   let conclusao = lead.dataConclusao || "Ainda não concluído";
 
@@ -496,6 +660,7 @@ function verLead(id) {
   document.getElementById("verProduto").textContent = lead.produto || "—";
   document.getElementById("verSeguranca").textContent = lead.requisitosSeguranca || "—";
   document.getElementById("verTamanhos").textContent = lead.tamanhos || "—";
+  document.getElementById("verObservacoes").textContent = lead.observacoes || "—";
 
   // Preenche os dados comerciais.
   document.getElementById("verOrcamento").textContent = Number(lead.orcamento).toLocaleString("pt-PT") + " €";
@@ -540,6 +705,7 @@ function editarLead(id) {
   document.getElementById("editEmpresa").value = lead.empresa;
   document.getElementById("editNomeContacto").value = lead.nomeContacto;
   document.getElementById("editEmail").value = lead.email;
+  document.getElementById("editCodigoPais").value = lead.codigoPais || "+351";
   document.getElementById("editTelefone").value = lead.telefone;
   document.getElementById("editOrigem").value = lead.origem;
   document.getElementById("editSetor").value = lead.setor;
@@ -617,6 +783,7 @@ formLead.addEventListener("submit", function (event) {
   let empresa = document.getElementById("empresa").value.trim();
   let nomeContacto = document.getElementById("nomeContacto").value.trim();
   let email = document.getElementById("email").value.trim();
+  let codigoPais = document.getElementById("codigoPais").value;
   let telefone = document.getElementById("telefone").value;
   let origem = document.getElementById("origem").value;
   let setor = document.getElementById("setor").value;
@@ -650,23 +817,30 @@ formLead.addEventListener("submit", function (event) {
 
 
   // CAMPOS NUMERICOS
-  let telefoneFinal = "";
   let colaboradoresFinal = "";
-
-  // Se existir telefone, converte para numero.
-  if (telefone !== "") {
-    telefoneFinal = Number(telefone);
-  }
 
   // Se existir numero de colaboradores, converte para numero.
   if (numeroColaboradores !== "") {
     colaboradoresFinal = Number(numeroColaboradores);
   }
 
+     // Confirma se o telefone tem exatamente 9 digitos quando estiver preenchido.
+  if (!validarTelefone(telefone)) {
+    alert("O telefone deve conter exatamente 9 números.");
+    return;
+  }
+
+
+  // Impede que o email seja igual ao de outro Lead.
+  if (emailJaExiste(email, null)) {
+    alert("Já existe outro Lead registado com este email.");
+    return;
+  }
+
 
   // CRIACAO DO LEAD
   // Junta os dados recolhidos e cria o novo Lead com um ID automatico.
-  let novoLead = criarLead(gerarId(), origem, empresa, nomeContacto, email, telefoneFinal, setor, colaboradoresFinal,
+  let novoLead = criarLead(gerarId(), origem, empresa, nomeContacto, email, codigoPais, telefone, setor, colaboradoresFinal,
     tipoAtividade, produto, tamanhos, cores, personalizacao, requisitosSeguranca, Number(orcamento), comercial, observacoes);
 
   // Adiciona o novo Lead a lista.
@@ -744,6 +918,8 @@ formEditarLead.addEventListener("submit", function (event) {
   let empresa = document.getElementById("editEmpresa").value.trim();
   let nomeContacto = document.getElementById("editNomeContacto").value.trim();
   let email = document.getElementById("editEmail").value.trim();
+  let codigoPais = document.getElementById("editCodigoPais").value;
+  let telefone = document.getElementById("editTelefone").value;
   let origem = document.getElementById("editOrigem").value;
   let setor = document.getElementById("editSetor").value;
   let orcamento = document.getElementById("editOrcamento").value;
@@ -765,6 +941,16 @@ formEditarLead.addEventListener("submit", function (event) {
     return;
   }
 
+  if (!validarTelefone(telefone)) {
+    alert("O telefone deve conter exatamente 9 números.");
+    return;
+  }
+
+  if (emailJaExiste(email, lead.id)) {
+    alert("Já existe outro Lead registado com este email.");
+    return;
+  }
+
 
   // Atualiza os dados principais do Lead.
   lead.empresa = empresa;
@@ -776,7 +962,9 @@ formEditarLead.addEventListener("submit", function (event) {
   lead.comercialResponsavel = comercial;
 
   // Atualiza os restantes campos diretamente a partir do formulario.
-  lead.telefone = document.getElementById("editTelefone").value;
+  // lead.telefone = document.getElementById("editTelefone").value;
+  lead.codigoPais = codigoPais;
+  lead.telefone = telefone;
   lead.numeroColaboradores = document.getElementById("editNumeroColaboradores").value;
   lead.tipoAtividade = document.getElementById("editTipoAtividade").value;
   lead.produto = document.getElementById("editProduto").value;
